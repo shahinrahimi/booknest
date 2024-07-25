@@ -11,6 +11,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 
+	"github.com/shahinrahimi/booknest/pkg/auth"
 	"github.com/shahinrahimi/booknest/pkg/book"
 	"github.com/shahinrahimi/booknest/pkg/user"
 	"github.com/shahinrahimi/booknest/store"
@@ -46,10 +47,17 @@ func main() {
 	sm := mux.NewRouter()
 
 	// create handlers
+	// auth
+	authH := auth.NewHandler(logger)
 	// user
 	userH := user.NewHandler(logger, sqliteStore)
 	// book
 	bookH := book.NewHandler(logger, sqliteStore)
+
+	// register auth handlers to router
+	postA := sm.Methods(http.MethodPost).Subrouter()
+	postA.HandleFunc("/api/auth", authH.Login)
+	postA.HandleFunc("/api/auth/logout", authH.Logout)
 
 	// register user handlers to router
 	getU := sm.Methods(http.MethodGet).Subrouter()

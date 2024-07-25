@@ -3,4 +3,4 @@ build:
 run: build
 	@./bin/booknest
 test:
-	@go test
+	@go test ./store -v
