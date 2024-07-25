@@ -40,6 +40,9 @@ func main() {
 		}
 	}()
 
+	// create tables
+	sqliteStore.Init()
+
 	sm := mux.NewRouter()
 
 	// create handlers
@@ -55,9 +58,11 @@ func main() {
 
 	postU := sm.Methods(http.MethodPost).Subrouter()
 	postU.HandleFunc("/api/user", userH.Create)
+	postU.Use(userH.MiddlewareValidateUser)
 
 	putU := sm.Methods(http.MethodPut).Subrouter()
 	putU.HandleFunc("/api/user/{id}", userH.Update)
+	putU.Use(userH.MiddlewareValidateUser)
 
 	deleteU := sm.Methods(http.MethodDelete).Subrouter()
 	deleteU.HandleFunc("/api/user/{id}", userH.Delete)

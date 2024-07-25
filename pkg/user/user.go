@@ -9,12 +9,30 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const (
+	CreateTable string = `CREATE TABLE IF NOT EXISTS users (
+		id TEXT PRIMARY KEY,
+		username TEXT NOT NULL,
+		password TEXT NOT NULL,
+		created_at TIMESTAMP NOT NULL,
+		is_admin BOOLEAN
+	);`
+	SelectAll string = `SELECT id, username, password, created_at, is_admin FROM users`
+	Select    string = `SELECT id, username, password, created_at, is_admin FROM users WHERE id = ?`
+	Insert    string = `INSERT INTO users (id, username, password, created_at, is_admin) VALUES (?, ?, ?, ?, ?)`
+	Update    string = `UPDATE users SET username = ?, password = ?, created_at = ?, is_admin = ? WHERE id = ?`
+	Delete    string = `DELETE FROM users WHERE id = ?`
+)
+
 type User struct {
 	ID        string    `json:"id"`
-	Username  string    `json:"username"`
-	Password  string    `json:"-"`
+	Username  string    `json:"username" validate:"required"`
+	Password  string    `json:"-" validate:"required"`
 	CreatedAt time.Time `json:"-"`
+	IsAdmin   bool      `json:"is_admin"`
 }
+
+type KeyUser struct{}
 
 func NewUser(username, password string) *User {
 	hp, err := hashPassword(password)
@@ -27,6 +45,16 @@ func NewUser(username, password string) *User {
 		Password:  hp,
 		CreatedAt: time.Now().UTC(),
 	}
+}
+
+func (u *User) ToArgs() []interface{} {
+	return []interface{}{u.ID, u.Username, u.Password, u.CreatedAt, u.IsAdmin}
+}
+func (u *User) ToUpdatedArgs() []interface{} {
+	return []interface{}{u.Username, u.Password, u.CreatedAt, u.IsAdmin, u.ID}
+}
+func (u *User) ToFeilds() []interface{} {
+	return []interface{}{&u.ID, &u.Username, &u.Password, &u.CreatedAt, &u.IsAdmin}
 }
 
 func hashPassword(password string) (string, error) {

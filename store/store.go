@@ -6,6 +6,8 @@ import (
 	"os"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/shahinrahimi/booknest/pkg/book"
+	"github.com/shahinrahimi/booknest/pkg/user"
 )
 
 type SqliteStore struct {
@@ -29,6 +31,20 @@ func NewSqliteStore(logger *log.Logger) *SqliteStore {
 	return &SqliteStore{
 		logger: logger,
 		db:     db,
+	}
+}
+
+func (s *SqliteStore) Init() {
+	// create users table if not exists
+	if _, err := s.db.Exec(user.CreateTable); err != nil {
+		s.logger.Printf("Error creating users table: %v", err)
+		s.logger.Panic("Unable to create users table")
+	}
+
+	// create books table if not exists
+	if _, err := s.db.Exec(book.CreateTable); err != nil {
+		s.logger.Printf("Error creating books table: %v", err)
+		s.logger.Panic("Unable to create books table")
 	}
 }
 
