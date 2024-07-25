@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
 
 	"github.com/shahinrahimi/booknest/pkg/auth"
@@ -27,7 +28,8 @@ func main() {
 	}
 
 	listenAddr := os.Getenv("LISTEN_ADDR")
-	if listenAddr == "" {
+	secretKey := os.Getenv("SECRECT_KEY")
+	if listenAddr == "" || secretKey == "" {
 		logger.Panic("Unable to get environmental variable")
 		os.Exit(1)
 	}
@@ -43,12 +45,13 @@ func main() {
 
 	// create tables
 	sqliteStore.Init()
-
+	// create serve mux
 	sm := mux.NewRouter()
-
+	// create cookie store
+	cs := sessions.NewCookieStore([]byte(secretKey))
 	// create handlers
 	// auth
-	authH := auth.NewHandler(logger)
+	authH := auth.NewHandler(logger, sqliteStore, cs)
 	// user
 	userH := user.NewHandler(logger, sqliteStore)
 	// book

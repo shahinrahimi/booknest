@@ -17,11 +17,12 @@ const (
 		created_at TIMESTAMP NOT NULL,
 		is_admin BOOLEAN
 	);`
-	SelectAll string = `SELECT id, username, password, created_at, is_admin FROM users`
-	Select    string = `SELECT id, username, password, created_at, is_admin FROM users WHERE id = ?`
-	Insert    string = `INSERT INTO users (id, username, password, created_at, is_admin) VALUES (?, ?, ?, ?, ?)`
-	Update    string = `UPDATE users SET username = ?, password = ?, created_at = ?, is_admin = ? WHERE id = ?`
-	Delete    string = `DELETE FROM users WHERE id = ?`
+	SelectAll        string = `SELECT id, username, password, created_at, is_admin FROM users`
+	SelectByID       string = `SELECT id, username, password, created_at, is_admin FROM users WHERE id = ?`
+	SelectByUsername string = `SELECT id, username, password, created_at, is_admin FROM users WHERE username = ?`
+	Insert           string = `INSERT INTO users (id, username, password, created_at, is_admin) VALUES (?, ?, ?, ?, ?)`
+	Update           string = `UPDATE users SET username = ?, password = ?, created_at = ?, is_admin = ? WHERE id = ?`
+	Delete           string = `DELETE FROM users WHERE id = ?`
 )
 
 type User struct {
