@@ -30,6 +30,33 @@ func setupTestDB(t *testing.T) *sql.DB {
 }
 
 // Test GetUser
+func TestGetUserByID(t *testing.T) {
+	logger := setupTestLogger()
+	db := setupTestDB(t)
+	defer db.Close()
+	store := &SqliteStore{db: db, logger: logger}
+
+	// create a test user
+	username := "testusername"
+	password := "testpassword"
+	newUser := user.NewUser(username, password)
+
+	// insert user to DB
+	if _, err := db.Exec(user.Insert, newUser.ToArgs()...); err != nil {
+		t.Fatalf("failed to insert test user: %v", err)
+	}
+
+	// check if user is exists
+	user, err := store.GetUserByID(newUser.ID)
+	if err != nil {
+		t.Fatalf("failed to get user: %v", err)
+	}
+	// check if username is stored correctly
+	if user.Username != newUser.Username {
+		t.Fatalf("expected username '%s', got '%s'", newUser.Username, user.Username)
+	}
+}
+
 func TestGetUser(t *testing.T) {
 	logger := setupTestLogger()
 	db := setupTestDB(t)
@@ -47,13 +74,13 @@ func TestGetUser(t *testing.T) {
 	}
 
 	// check if user is exists
-	user, err := store.GetUser(newUser.ID)
+	user, err := store.GetUser(username)
 	if err != nil {
 		t.Fatalf("failed to get user: %v", err)
 	}
 	// check if username is stored correctly
-	if user.Username != newUser.Username {
-		t.Fatalf("expected username '%s', got '%s'", newUser.Username, user.Username)
+	if user.ID != newUser.ID {
+		t.Fatalf("expected user ID '%s', got '%s'", newUser.ID, user.ID)
 	}
 }
 

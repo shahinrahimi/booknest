@@ -30,7 +30,7 @@ func main() {
 	listenAddr := os.Getenv("LISTEN_ADDR")
 	secretKey := os.Getenv("SECRECT_KEY")
 	if listenAddr == "" || secretKey == "" {
-		logger.Panic("Unable to get environmental variable")
+		logger.Panic("Unable to get environmental variables")
 		os.Exit(1)
 	}
 
