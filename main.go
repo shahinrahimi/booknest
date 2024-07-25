@@ -10,6 +10,10 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+
+	"github.com/shahinrahimi/booknest/pkg/book"
+	"github.com/shahinrahimi/booknest/pkg/user"
+	"github.com/shahinrahimi/booknest/store"
 )
 
 func main() {
@@ -27,7 +31,50 @@ func main() {
 		os.Exit(1)
 	}
 
+	// create booknest store
+	sqliteStore := store.NewSqliteStore(logger)
+	// make sure to close db connection
+	defer func() {
+		if err := sqliteStore.Close(); err != nil {
+			logger.Printf("Error closing database connection: %v", err)
+		}
+	}()
+
 	sm := mux.NewRouter()
+
+	// create handlers
+	// user
+	userH := user.NewHandler(logger, sqliteStore)
+	// book
+	bookH := book.NewHandler(logger, sqliteStore)
+
+	// register user handlers to router
+	getU := sm.Methods(http.MethodGet).Subrouter()
+	getU.HandleFunc("/api/user", userH.ListAll)
+	getU.HandleFunc("/api/user/{id}", userH.ListSingle)
+
+	postU := sm.Methods(http.MethodPost).Subrouter()
+	postU.HandleFunc("/api/user", userH.Create)
+
+	putU := sm.Methods(http.MethodPut).Subrouter()
+	putU.HandleFunc("/api/user/{id}", userH.Update)
+
+	deleteU := sm.Methods(http.MethodDelete).Subrouter()
+	deleteU.HandleFunc("/api/user/{id}", userH.Delete)
+
+	// register book handlers to router
+	getB := sm.Methods(http.MethodGet).Subrouter()
+	getB.HandleFunc("/api/book", bookH.ListAll)
+	getB.HandleFunc("/api/book/{id}", bookH.ListSingle)
+
+	postB := sm.Methods(http.MethodPost).Subrouter()
+	postB.HandleFunc("/api/book", bookH.Create)
+
+	putB := sm.Methods(http.MethodPut).Subrouter()
+	putB.HandleFunc("/api/book/{id}", bookH.Update)
+
+	deleteB := sm.Methods(http.MethodDelete).Subrouter()
+	deleteB.HandleFunc("/api/book/{id}", bookH.Delete)
 
 	s := http.Server{
 		Addr:     listenAddr,
