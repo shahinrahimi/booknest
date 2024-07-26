@@ -1,33 +1,37 @@
-package user
+package book
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/shahinrahimi/booknest/types"
 	"github.com/shahinrahimi/booknest/utils"
-
-	"github.com/go-playground/validator/v10"
 )
 
-func (h *Handler) MiddlewareValidateUser(next http.Handler) http.Handler {
+var validate *validator.Validate
+
+func (h *Handler) MiddlewareValidateBook(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		// deserilizing from json
-		var u User
-		if err := utils.FromJSON(&u, r.Body); err != nil {
+		var b Book
+		if err := json.NewDecoder(r.Body).Decode(&b); err != nil {
 			h.logger.Println("error deserializing user", err)
 			utils.WriteJSON(rw, http.StatusInternalServerError, types.ApiError{Error: "internal error"})
 			return
 		}
-		// validate user
-		validate := validator.New(validator.WithRequiredStructEnabled())
-		if err := validate.Struct(u); err != nil {
-			h.logger.Println("validating user failed", err)
+
+		// validate book
+		validate = validator.New(validator.WithRequiredStructEnabled())
+
+		if err := validate.Struct(b); err != nil {
+			h.logger.Println("validating book failed", err)
 			utils.WriteJSON(rw, http.StatusBadRequest, types.ApiError{Error: "bad request"})
 			return
 		}
-		// Add the user to context
-		ctx := context.WithValue(r.Context(), KeyUser{}, u)
+		// Add the book to the context
+		ctx := context.WithValue(r.Context(), KeyBook{}, b)
 		r = r.WithContext(ctx)
 		// Call the next handler, which can be another middleware in the chain, or the final handler.
 		next.ServeHTTP(rw, r)
