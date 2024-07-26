@@ -2,6 +2,7 @@ package user
 
 import (
 	"fmt"
+	"math"
 	"math/rand"
 	"strconv"
 	"time"
@@ -45,6 +46,21 @@ func NewUser(username, password string) *User {
 		Username:  username,
 		Password:  hp,
 		CreatedAt: time.Now().UTC(),
+		IsAdmin:   false,
+	}
+}
+
+func NewRootUser(username, password string) *User {
+	hp, err := hashPassword(password)
+	if err != nil {
+		panic("Unable to hash the password")
+	}
+	return &User{
+		ID:        fmt.Sprint("BA" + strconv.Itoa(math.MaxInt)),
+		Username:  username,
+		Password:  hp,
+		CreatedAt: time.Now().UTC(),
+		IsAdmin:   true,
 	}
 }
 

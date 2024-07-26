@@ -30,7 +30,14 @@ func main() {
 	listenAddr := os.Getenv("LISTEN_ADDR")
 	secretKey := os.Getenv("SECRECT_KEY")
 	if listenAddr == "" || secretKey == "" {
-		logger.Panic("Unable to get environmental variables")
+		logger.Panic("Unable to get environmental variables for server")
+		os.Exit(1)
+	}
+
+	rootUsername := os.Getenv("ROOT_USERNAME")
+	rootPassword := os.Getenv("ROOT_PASSWORD")
+	if rootUsername == "" || rootPassword == "" {
+		logger.Panic("Unable to get environmental variables for root user")
 		os.Exit(1)
 	}
 
@@ -45,6 +52,8 @@ func main() {
 
 	// create tables
 	sqliteStore.Init()
+	// create root user if not exists
+	sqliteStore.SetupRootAdmin(rootUsername, rootPassword)
 	// create serve mux
 	sm := mux.NewRouter()
 	// create cookie store

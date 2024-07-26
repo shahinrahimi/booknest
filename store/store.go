@@ -3,7 +3,9 @@ package store
 import (
 	"database/sql"
 	"log"
+	"math"
 	"os"
+	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/shahinrahimi/booknest/pkg/book"
@@ -45,6 +47,24 @@ func (s *SqliteStore) Init() {
 	if _, err := s.db.Exec(book.CreateTable); err != nil {
 		s.logger.Printf("Error creating books table: %v", err)
 		s.logger.Panic("Unable to create books table")
+	}
+}
+
+// setup root user (admin)
+func (s *SqliteStore) SetupRootAdmin(username, password string) {
+	row := s.db.QueryRow(user.SelectByID, "BA"+strconv.Itoa(math.MaxInt))
+	var admin user.User
+	if err := row.Scan(&admin); err != nil {
+		if err == sql.ErrNoRows {
+			s.logger.Println("root user not found")
+			// Create the root admin user
+			admin := user.NewRootUser(username, password)
+			if err := s.CreateUser(*admin); err != nil {
+				s.logger.Panic("error creating root(admin) user", err)
+				return
+			}
+			s.logger.Println("root user created")
+		}
 	}
 }
 
