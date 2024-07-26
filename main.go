@@ -94,12 +94,17 @@ func main() {
 
 	postB := sm.Methods(http.MethodPost).Subrouter()
 	postB.HandleFunc("/api/book", bookH.Create)
+	postB.Use(authH.MiddlewareRequireAdmin)
+	postB.Use(bookH.MiddlewareValidateBook)
 
 	putB := sm.Methods(http.MethodPut).Subrouter()
 	putB.HandleFunc("/api/book/{id}", bookH.Update)
+	putB.Use(authH.MiddlewareRequireAdmin)
+	putU.Use(bookH.MiddlewareValidateBook)
 
 	deleteB := sm.Methods(http.MethodDelete).Subrouter()
 	deleteB.HandleFunc("/api/book/{id}", bookH.Delete)
+	deleteB.Use(authH.MiddlewareRequireAdmin)
 
 	s := http.Server{
 		Addr:     listenAddr,
