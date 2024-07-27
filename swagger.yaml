@@ -2,17 +2,18 @@ basePath: /api
 consumes:
     - application/json
 definitions:
-    APIError:
-        description: APIError APIError Api error
+    ApiError:
+        description: APIError Api error
         properties:
             error:
                 description: error
                 type: string
                 x-go-name: Error
         type: object
+        x-go-name: APIError
         x-go-package: github.com/shahinrahimi/booknest/sdk/models
-    APISuccess:
-        description: APISuccess APISuccess Api success
+    ApiSuccess:
+        description: APISuccess Api success
         properties:
             message:
                 description: message
@@ -22,26 +23,11 @@ definitions:
                 description: result
                 x-go-name: Result
         type: object
+        x-go-name: APISuccess
         x-go-package: github.com/shahinrahimi/booknest/sdk/models
-    ApiError:
-        properties:
-            error:
-                type: string
-                x-go-name: Error
-        type: object
-        x-go-package: github.com/shahinrahimi/booknest/types
-    ApiSuccess:
-        properties:
-            message:
-                type: string
-                x-go-name: Message
-            result:
-                x-go-name: Result
-        type: object
-        x-go-package: github.com/shahinrahimi/booknest/types
     Book:
         description: |-
-            Book Book Book Book Book Book Book Book Book Book Book Book Book defines the structure for an API book
+            Book Book Book Book Book Book Book Book Book Book Book Book Book Book defines the structure for an API book
             swagger: model Book
         properties:
             author:

@@ -114,6 +114,11 @@ func main() {
 	getD.Handle("/docs", sh)
 	getD.Handle("/swagger.yaml", http.FileServer(http.Dir("./")))
 
+	// views handlers
+	// mh := handlers.NewHandler()
+	// getV := sm.Methods(http.MethodGet).Subrouter()
+	// getV.HandleFunc("/", templ.Handler())
+
 	s := http.Server{
 		Addr:     listenAddr,
 		Handler:  sm,
