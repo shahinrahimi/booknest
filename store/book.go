@@ -1,6 +1,13 @@
 package store
 
-import "github.com/shahinrahimi/booknest/pkg/book"
+import (
+	"fmt"
+
+	"github.com/shahinrahimi/booknest/pkg/book"
+)
+
+// ErrBookNotFound is an error raised when the book not found in database
+var ErrBookNotFound = fmt.Errorf("Book not found")
 
 func (s *SqliteStore) GetBooks() ([]*book.Book, error) {
 	rows, err := s.db.Query(book.SelectAll)

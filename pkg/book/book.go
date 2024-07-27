@@ -7,15 +7,37 @@ import (
 	"time"
 )
 
+// Book defines the structure for an API book
+// swagger: model Book
 type Book struct {
-	ID          string    `json:"id"`
-	Title       string    `json:"title" validate:"required"`
-	Author      string    `json:"author" validate:"required"`
-	Description string    `json:"description" validate:"required"`
-	Cover       string    `json:"cover" validate:"required"`
-	Price       float32   `json:"price" validate:"required,gte=1"`
-	CreatedAt   time.Time `json:"-"`
-	UpdatedAt   time.Time `json:"_"`
+	// the id for the book
+	// required: false
+	ID string `json:"id"`
+	// the title for the book
+	// example: Animal Farm
+	// required: true
+	Title string `json:"title" validate:"required"`
+	// the author for the book
+	// exmaple: George Orvil
+	// required: true
+	Author string `json:"author" validate:"required"`
+	// the description for the book
+	// example: The story about animals that lives in a farm
+	// required: true
+	Description string `json:"description" validate:"required"`
+	// the cover for the book
+	// example: http://...
+	// required: true
+	Cover string `json:"cover" validate:"required"`
+	// the price for the book
+	// example: 10
+	// required: true
+	// min: 1
+	Price float32 `json:"price" validate:"required,gte=1"`
+	// swagger: ignore
+	CreatedAt time.Time `json:"-"`
+	// swagger: ignore
+	UpdatedAt time.Time `json:"-"`
 }
 
 type KeyBook struct{}
@@ -28,7 +50,8 @@ const (
 		description TEXT NOT NULL,
 		cover TEXT NOT NULL,
 		price REAL,
-		created_at TIMESTAMP NOT NULL
+		created_at TIMESTAMP NOT NULL,
+		updated_at TIMESTAMP NOT NULL
 	);`
 	SelectAll string = `SELECT id, title, author, description, cover, price, created_at FROM books`
 	Select    string = `SELECT id, title, author, description, cover, price, created_at FROM books WHERE id = ?`
