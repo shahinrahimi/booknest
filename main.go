@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/a-h/templ"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -17,6 +18,7 @@ import (
 	"github.com/shahinrahimi/booknest/pkg/book"
 	"github.com/shahinrahimi/booknest/pkg/user"
 	"github.com/shahinrahimi/booknest/store"
+	"github.com/shahinrahimi/booknest/views/home"
 )
 
 func main() {
@@ -114,10 +116,11 @@ func main() {
 	getD.Handle("/docs", sh)
 	getD.Handle("/swagger.yaml", http.FileServer(http.Dir("./")))
 
-	// views handlers
-	// mh := handlers.NewHandler()
-	// getV := sm.Methods(http.MethodGet).Subrouter()
-	// getV.HandleFunc("/", templ.Handler())
+	sm.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./public/"))))
+
+	homeCom := home.Index()
+	getV := sm.Methods(http.MethodGet).Subrouter()
+	getV.Handle("/", templ.Handler(homeCom))
 
 	s := http.Server{
 		Addr:     listenAddr,

@@ -3,6 +3,7 @@ module github.com/shahinrahimi/booknest
 go 1.22.2
 
 require (
+	github.com/a-h/templ v0.2.747
 	github.com/go-openapi/errors v0.22.0
 	github.com/go-openapi/runtime v0.28.0
 	github.com/go-openapi/strfmt v0.23.0
@@ -17,7 +18,6 @@ require (
 )
 
 require (
-	github.com/a-h/templ v0.2.747 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
