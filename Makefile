@@ -5,6 +5,7 @@ swagger: check_install
 	@swagger generate spec -o ./swagger.yaml --scan-models
 
 generate_client:
+	@mkdir -p sdk
 	@cd sdk && swagger generate client -f ../swagger.yaml -A [BOOKNEST-API]
 
 build: swagger
