@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/go-openapi/runtime/middleware"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
@@ -94,17 +95,24 @@ func main() {
 
 	postB := sm.Methods(http.MethodPost).Subrouter()
 	postB.HandleFunc("/api/book", bookH.Create)
-	postB.Use(authH.MiddlewareRequireAdmin)
+	// postB.Use(authH.MiddlewareRequireAdmin)
 	postB.Use(bookH.MiddlewareValidateBook)
 
 	putB := sm.Methods(http.MethodPut).Subrouter()
 	putB.HandleFunc("/api/book/{id}", bookH.Update)
-	putB.Use(authH.MiddlewareRequireAdmin)
+	// putB.Use(authH.MiddlewareRequireAdmin)
 	putU.Use(bookH.MiddlewareValidateBook)
 
 	deleteB := sm.Methods(http.MethodDelete).Subrouter()
 	deleteB.HandleFunc("/api/book/{id}", bookH.Delete)
-	deleteB.Use(authH.MiddlewareRequireAdmin)
+	// deleteB.Use(authH.MiddlewareRequireAdmin)
+
+	// handlers for documentation
+	opts := middleware.RedocOpts{SpecURL: "/swagger.yaml"}
+	sh := middleware.Redoc(opts, nil)
+	getD := sm.Methods(http.MethodGet).Subrouter()
+	getD.Handle("/docs", sh)
+	getD.Handle("/swagger.yaml", http.FileServer(http.Dir("./")))
 
 	s := http.Server{
 		Addr:     listenAddr,
