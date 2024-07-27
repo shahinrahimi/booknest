@@ -5,6 +5,7 @@ type ApiError struct {
 }
 type ApiSuccess struct {
 	Message string `json:"message"`
+	Result  any    `json:"result"`
 }
 
 type LoginRequest struct {

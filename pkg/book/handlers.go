@@ -35,11 +35,6 @@ func (h *Handler) ListAll(rw http.ResponseWriter, r *http.Request) {
 		utils.WriteJSON(rw, http.StatusInternalServerError, types.ApiError{Error: "internal error"})
 		return
 	}
-	if len(books) == 0 {
-		h.logger.Println("no book found in DB")
-		utils.WriteJSON(rw, http.StatusOK, types.ApiSuccess{Message: "there is no book found"})
-		return
-	}
 	utils.WriteJSON(rw, http.StatusOK, books)
 }
 
@@ -68,7 +63,7 @@ func (h *Handler) ListSingle(rw http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(rw, http.StatusOK, b)
 }
 
-// swagger:route POST /api/book/ book createBook
+// swagger:route POST /book book createBook
 // Create a new Book
 // responses:
 //	201: successResponse
@@ -91,7 +86,7 @@ func (h *Handler) Create(rw http.ResponseWriter, r *http.Request) {
 
 }
 
-// swagger:route PUT /api/book/{id} book updateBook
+// swagger:route PUT /book/{id} book updateBook
 // update the Book
 // responses:
 //	201: successResponse
@@ -131,7 +126,7 @@ func (h *Handler) Update(rw http.ResponseWriter, r *http.Request) {
 
 }
 
-// swagger:route DELETE /api/book/{id} book deleteBook
+// swagger:route DELETE /book/{id} book deleteBook
 // delete the Book
 // responses:
 //	201: successResponse

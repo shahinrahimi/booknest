@@ -1,24 +1,33 @@
-basePath: /
+basePath: /api
 consumes:
     - application/json
 definitions:
     ApiError:
+        description: APIError Api error
         properties:
             error:
+                description: error
                 type: string
                 x-go-name: Error
         type: object
-        x-go-package: github.com/shahinrahimi/booknest/types
+        x-go-name: APIError
+        x-go-package: github.com/shahinrahimi/booknest/sdk/models
     ApiSuccess:
+        description: APISuccess Api success
         properties:
             message:
+                description: message
                 type: string
                 x-go-name: Message
+            result:
+                description: result
+                x-go-name: Result
         type: object
-        x-go-package: github.com/shahinrahimi/booknest/types
+        x-go-name: APISuccess
+        x-go-package: github.com/shahinrahimi/booknest/sdk/models
     Book:
         description: |-
-            Book defines the structure for an API book
+            Book Book Book Book Book Book Book Book Book Book Book Book Book Book defines the structure for an API book
             swagger: model Book
         properties:
             author:
@@ -38,7 +47,7 @@ definitions:
                 type: string
                 x-go-name: Description
             id:
-                description: the id for the book
+                description: ID of a book
                 type: string
                 x-go-name: ID
             price:
@@ -54,60 +63,18 @@ definitions:
                 type: string
                 x-go-name: Title
         required:
-            - title
             - author
-            - description
             - cover
+            - description
             - price
+            - title
         type: object
-        x-go-package: github.com/shahinrahimi/booknest/pkg/book
+        x-go-package: github.com/shahinrahimi/booknest/sdk/models
 info:
     description: Documentation for [BOOKNEST] API
     title: of [BOOKNEST] API
     version: 1.0.0
 paths:
-    /api/book/:
-        post:
-            description: Create a new Book
-            operationId: createBook
-            responses:
-                "201":
-                    $ref: '#/responses/successResponse'
-                "400":
-                    $ref: '#/responses/errorResponse'
-                "500":
-                    $ref: '#/responses/errorResponse'
-            tags:
-                - book
-    /api/book/{id}:
-        delete:
-            description: delete the Book
-            operationId: deleteBook
-            responses:
-                "201":
-                    $ref: '#/responses/successResponse'
-                "400":
-                    $ref: '#/responses/errorResponse'
-                "404":
-                    $ref: '#/responses/errorResponse'
-                "500":
-                    $ref: '#/responses/errorResponse'
-            tags:
-                - book
-        put:
-            description: update the Book
-            operationId: updateBook
-            responses:
-                "201":
-                    $ref: '#/responses/successResponse'
-                "400":
-                    $ref: '#/responses/errorResponse'
-                "404":
-                    $ref: '#/responses/errorResponse'
-                "500":
-                    $ref: '#/responses/errorResponse'
-            tags:
-                - book
     /book:
         get:
             description: Return a list of books from database
@@ -119,13 +86,91 @@ paths:
                     $ref: '#/responses/errorResponse'
             tags:
                 - book
+        post:
+            description: Create a new Book
+            operationId: createBook
+            parameters:
+                - description: |-
+                    Book data structure to Update or Create.
+                    Note: the id filed is ignored by update and create operations
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/Book'
+            responses:
+                "201":
+                    $ref: '#/responses/successResponse'
+                "400":
+                    $ref: '#/responses/errorResponse'
+                "500":
+                    $ref: '#/responses/errorResponse'
+            tags:
+                - book
     /book/{id}:
+        delete:
+            description: delete the Book
+            operationId: deleteBook
+            parameters:
+                - description: The id of the book for which the operation related
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: ID
+            responses:
+                "201":
+                    $ref: '#/responses/successResponse'
+                "400":
+                    $ref: '#/responses/errorResponse'
+                "404":
+                    $ref: '#/responses/errorResponse'
+                "500":
+                    $ref: '#/responses/errorResponse'
+            tags:
+                - book
         get:
             description: Return a book from database
             operationId: listSingleBook
+            parameters:
+                - description: The id of the book for which the operation related
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: ID
             responses:
                 "200":
                     $ref: '#/responses/bookResponse'
+                "404":
+                    $ref: '#/responses/errorResponse'
+                "500":
+                    $ref: '#/responses/errorResponse'
+            tags:
+                - book
+        put:
+            description: update the Book
+            operationId: updateBook
+            parameters:
+                - description: |-
+                    Book data structure to Update or Create.
+                    Note: the id filed is ignored by update and create operations
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/Book'
+                - description: The id of the book for which the operation related
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: ID
+            responses:
+                "201":
+                    $ref: '#/responses/successResponse'
+                "400":
+                    $ref: '#/responses/errorResponse'
                 "404":
                     $ref: '#/responses/errorResponse'
                 "500":

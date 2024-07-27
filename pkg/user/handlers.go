@@ -46,7 +46,7 @@ func (h *Handler) ListSingle(rw http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Create(rw http.ResponseWriter, r *http.Request) {
-	// fetch the user from the context
+	// fetch validated user from the context
 	u := r.Context().Value(KeyUser{}).(User)
 	// check if username is not already taken by another user
 	users, err := h.storage.GetUsers()
@@ -63,7 +63,7 @@ func (h *Handler) Create(rw http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// create user and to DB
+	// create new user
 	newUser := NewUser(u.Username, u.Password)
 	if err := h.storage.CreateUser(*newUser); err != nil {
 		h.logger.Println("error creating a new user")
