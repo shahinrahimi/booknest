@@ -7,14 +7,15 @@ import (
 )
 
 // ErrBookNotFound is an error raised when the book not found in database
-var ErrBookNotFound = fmt.Errorf("Book not found")
+var ErrBookNotFound = fmt.Errorf("book not found")
 
 func (s *SqliteStore) GetBooks() ([]*book.Book, error) {
 	rows, err := s.db.Query(book.SelectAll)
 	if err != nil {
 		return nil, err
 	}
-	var books []*book.Book
+	// initiate books as empty slice
+	books := []*book.Book{}
 	for rows.Next() {
 		var b book.Book
 		if err := rows.Scan(&b); err != nil {

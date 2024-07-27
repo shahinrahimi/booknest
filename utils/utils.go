@@ -7,10 +7,10 @@ import (
 )
 
 // WriteJSON writes response as json
-func WriteJSON(w http.ResponseWriter, status int, v any) error {
-	w.WriteHeader(status)
-	w.Header().Add("Content-type", "application/json")
-	return json.NewEncoder(w).Encode(v)
+func WriteJSON(rw http.ResponseWriter, status int, v any) error {
+	rw.Header().Add("Content-type", "application/json")
+	rw.WriteHeader(status)
+	return json.NewEncoder(rw).Encode(v)
 }
 
 // ToJSON serializes the given interface into a string based JSON format

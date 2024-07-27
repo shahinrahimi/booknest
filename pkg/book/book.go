@@ -10,8 +10,9 @@ import (
 // Book defines the structure for an API book
 // swagger: model Book
 type Book struct {
-	// the id for the book
+	// ID of a book
 	// required: false
+	// in: path
 	ID string `json:"id"`
 	// the title for the book
 	// example: Animal Farm
