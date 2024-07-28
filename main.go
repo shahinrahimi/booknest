@@ -120,7 +120,6 @@ func main() {
 	// tags dev => will serve public folder
 	// tags prod => will embed assets to binary
 	// sm.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./public/"))))
-	// setupStaticFileServer(sm)
 	sm.PathPrefix("/public/").Handler(staticFileHandler())
 
 	homeCom := home.Index()

@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 
-body {
+/* body {
     background-color: blueviolet;
+    background-color: brown;
     color: azure;
     font-size: 2rem;
     font-family: 'Roboto' sans-serif;
-}
+} */
