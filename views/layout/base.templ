@@ -1,19 +1,33 @@
 package layout
 
+import "github.com/shahinrahimi/booknest/pkg/user"
+
 templ Base() {
 	<html lang="en" data-theme="dark">
 		<head>
 			<title>BOOKNEST</title>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			<link rel="icon" type="image/x-icon" href="/public/favicon.ico"/>
-			<link rel="stylesheet" href="/public/styles.css"/>
-			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+			<link rel="icon" type="image/x-icon" href="/public/public/favicon.ico"/>
+			<link rel="stylesheet" href="/public/public/styles.css"/>
+			<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+			<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/2.0.1/htmx.min.js" integrity="sha512-/POjPSnGjDaJfmt9O7LOTz1eGoCQNsVSJdgxYTVjhnWRDmuDFTvzwQrxIxipRrakLw7IYJfOsanDe7WuP40zxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/2.0.1/htmx.min.js" integrity="sha512-/POjPSnGjDaJfmt9O7LOTz1eGoCQNsVSJdgxYTVjhnWRDmuDFTvzwQrxIxipRrakLw7IYJfOsanDe7WuP40zxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 		</head>
-		<body class="max-w-[1920px] mx-auto">
+		<body class="max-w-[1920px] mx-auto h-screen bg-cyan-600 flex flex-col justify-between">
 			{ children... }
 		</body>
 	</html>
+}
+
+templ Main(u user.User) {
+	@Base() {
+		@Header(u)
+		<div>
+			{ children... }
+		</div>
+		@Footer()
+	}
 }

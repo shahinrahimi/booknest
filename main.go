@@ -8,7 +8,6 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/a-h/templ"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -18,7 +17,7 @@ import (
 	"github.com/shahinrahimi/booknest/pkg/book"
 	"github.com/shahinrahimi/booknest/pkg/user"
 	"github.com/shahinrahimi/booknest/store"
-	"github.com/shahinrahimi/booknest/views/home"
+	"github.com/shahinrahimi/booknest/views/handlers"
 )
 
 func main() {
@@ -61,6 +60,8 @@ func main() {
 	sm := mux.NewRouter()
 	// create cookie store
 	cs := sessions.NewCookieStore([]byte(secretKey))
+	// set cookie expire time in secconds
+	cs.MaxAge(60) // 60 * 60 = 1hr
 	// create handlers
 	// auth
 	authH := auth.NewHandler(logger, sqliteStore, cs)
@@ -122,9 +123,12 @@ func main() {
 	// sm.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./public/"))))
 	sm.PathPrefix("/public/").Handler(staticFileHandler())
 
-	homeCom := home.Index()
+	// view handlers
+	vh := handlers.NewViewHandler(logger)
 	getV := sm.Methods(http.MethodGet).Subrouter()
-	getV.Handle("/", templ.Handler(homeCom))
+	getV.Use(authH.MiddlewareProvideAuthentication)
+	getV.HandleFunc("/", vh.HandleHome)
+	getV.HandleFunc("/login", vh.HandlerLogin)
 
 	s := http.Server{
 		Addr:     listenAddr,
