@@ -8,9 +8,9 @@ import (
 	"net/http"
 )
 
-//go:embed public
-var publicFS embed.FS
+//go:embed public/*
+var publicFiles embed.FS
 
-func public() http.Handler {
-	return http.FileServerFS(publicFS)
+func staticFileHandler() http.Handler {
+	return http.StripPrefix("/public/", http.FileServer(http.FS(publicFiles)))
 }

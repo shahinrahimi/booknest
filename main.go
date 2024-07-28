@@ -116,7 +116,12 @@ func main() {
 	getD.Handle("/docs", sh)
 	getD.Handle("/swagger.yaml", http.FileServer(http.Dir("./")))
 
-	sm.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./public/"))))
+	// serve static files in two build mode
+	// tags dev => will serve public folder
+	// tags prod => will embed assets to binary
+	// sm.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./public/"))))
+	// setupStaticFileServer(sm)
+	sm.PathPrefix("/public/").Handler(staticFileHandler())
 
 	homeCom := home.Index()
 	getV := sm.Methods(http.MethodGet).Subrouter()

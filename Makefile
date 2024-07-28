@@ -17,8 +17,7 @@ run: build
 css:
 	@tailwindcss -i ./views/css/app.css -o ./public/styles.css --watch
 
-testing:
-	@air
+templ:
 	@templ generate --watch --proxy=http://localhost:7000
 
 test_store:
