@@ -1,9 +1,18 @@
 package home
 
-import "github.com/shahinrahimi/booknest/views/layout"
+import (
+	"fmt"
+	"github.com/shahinrahimi/booknest/pkg/user"
+	"github.com/shahinrahimi/booknest/views/layout"
+)
 
-templ Index() {
-	@layout.Base() {
-		<h1 class="bg-red-500 text-white">Welcom to <strong>BOOKNEST</strong></h1>
+templ Home(u user.User) {
+	@layout.Main(u) {
+		<div>
+			<h1 class="bg-red-500 text-white">Welcom to <strong>BOOKNEST</strong></h1>
+			<h2>{ u.Username }</h2>
+			<h3>{ u.ID }</h3>
+			<h4>{ fmt.Sprintf("The user is admin?: %v", u.IsAdmin) }</h4>
+		</div>
 	}
 }
