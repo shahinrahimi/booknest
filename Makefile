@@ -14,6 +14,12 @@ build: swagger
 run: build
 	@./bin/booknest
 
+css:
+	@tailwindcss -i ./views/css/app.css -o ./public/styles.css --watch
+
+templ:
+	@templ generate --watch --proxy=http://localhost:7000
+
 test_store:
 	@go test ./store -v
 
